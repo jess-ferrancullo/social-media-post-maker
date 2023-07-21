@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FacebookController;
+use App\Http\Controllers\InstagramController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +33,15 @@ Route::middleware('auth')->group(function () {
         Route::get('/posts', [FacebookController::class, 'index'])->name('facebook.posts.index');
         Route::get('/posts/create', [FacebookController::class, 'create'])->name('facebook.posts.create');
         Route::post('/posts/store', [FacebookController::class, 'store'])->name('facebook.posts.store');
+
+        Route::get('/page-tokens/create', [FacebookController::class, 'createPageToken'])->name('facebook.pages.create');
+        Route::post('/page-tokens/', [FacebookController::class, 'savePageToken'])->name('facebook.pages.store');
+    });
+
+    Route::prefix('instagram')->group(function () {
+        Route::get('/posts', [InstagramController::class, 'index'])->name('instagram.posts.index');
+        Route::get('/posts/create', [InstagramController::class, 'create'])->name('instagram.posts.create');
+        Route::post('/posts/store', [InstagramController::class, 'store'])->name('instagram.posts.store');
     });
 });
 

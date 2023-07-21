@@ -18,6 +18,9 @@
                     <x-nav-link :href="route('facebook.posts.index')" :active="request()->routeIs('facebook.*')">
                         {{ __('Facebook Posts') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('instagram.posts.index')" :active="request()->routeIs('instagram.*')">
+                        {{ __('Instagram Posts') }}
+                    </x-nav-link>
                 </div>
             </div>
 
