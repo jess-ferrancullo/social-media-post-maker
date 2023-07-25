@@ -12,13 +12,13 @@ class FacebookService
 
     function __construct(private FacebookRepository $facebookRepository)
     {
-        $this->facebook = FacebookApi::getInstance();
+        $this->facebook = FacebookApi::getInstance()->getApi();
     }
 
     public function post(array $postData)
     {
         $params = [];
-        if ($postData['link']) {
+        if ($postData['link'] && $postData['upload'] === 'link') {
             $params['link'] = $postData['link'];
         }
         if ($postData['upload'] === 'video') {
@@ -37,7 +37,7 @@ class FacebookService
 
         $token = $this->facebookRepository->getActiveApiToken();
         $endPoint = "/" . $token->user_page_id . "/feed";
-        $response = $this->facebook->getApi()->post($endPoint, $params);
+        $response = $this->facebook->post($endPoint, $params);
 
         return $response->getDecodedBody();
     }
@@ -70,10 +70,10 @@ class FacebookService
                 'message' => $messages[$index],
                 'published' => false,
             ];
-            $imagePostRequests[] = $this->facebook->getApi()->request('POST', $endPoint, $params);
+            $imagePostRequests[] = $this->facebook->request('POST', $endPoint, $params);
         }
 
-        $uploadedImages = $this->facebook->getApi()->sendBatchRequest($imagePostRequests);
+        $uploadedImages = $this->facebook->sendBatchRequest($imagePostRequests);
         $imageIds = [];
 
         foreach ($uploadedImages as $image) {
@@ -96,14 +96,14 @@ class FacebookService
         $params = [
             'title' => 'sample video',
             'description' => 'Hello world again',
-            'file_url' => array_rand($sampleVideoUrls),
+            'file_url' => array_rand(array_flip($sampleVideoUrls)),
         ];
 
         $params = array_merge($params, $requestParams);
 
         $token = $this->facebookRepository->getActiveApiToken();
         $endPoint = "/" . $token->user_page_id . "/videos";
-        $response = $this->facebook->getApi()->post($endPoint, $params);
+        $response = $this->facebook->post($endPoint, $params);
         // $response = $this->facebook->uploadVideo($this->pageId, $fileUrl, $params);
 
         return $response;
@@ -111,14 +111,15 @@ class FacebookService
 
     public function getFacebookPosts()
     {
-        return [];
+        // return [];
+        // $this->getLongLivedPageAccessToken();
         try {
+            
             $token = $this->facebookRepository->getActiveApiToken();
+            $this->facebook->setDefaultAccessToken($token->access_token);
+
             $endPoint = "/" . $token->user_page_id . "/feed?fields=permalink_url,message,created_time";
-            $posts = $this->facebook
-                ->getApi()
-                ->get($endPoint)
-                ->getDecodedBody();
+            $posts = $this->facebook->get($endPoint)->getDecodedBody();
         } catch (Exception $e) {
             return [];
         }
@@ -126,6 +127,7 @@ class FacebookService
         return $posts['data'];
     }
 
+    
     public function getFacebookPages()
     {
         return $this->facebookRepository->getPages();
@@ -136,7 +138,7 @@ class FacebookService
         $this->facebookRepository->setActivePage($pageId);
         $accessToken = $this->facebookRepository->getActiveApiToken()->access_token;
 
-        $this->facebook->setAccessToken($accessToken);
+        $this->facebook->setDefaultAccessToken($accessToken);
     }
 
     public function savePageToken(array $requestData)
@@ -146,4 +148,43 @@ class FacebookService
 
         return $this->facebookRepository->savePageToken($requestData);
     }
+
+
+    // ---  These are helpers to set access tokens ---- //
+
+
+    public function getUserLongLivedAccessToken()
+    {
+        $token = $this->facebookRepository->getUserApiToken();
+        $params = [
+            'grant_type=fb_exchange_token',
+            'client_id=' . env('FACEBOOK_APP_ID'),
+            'client_secret=' . env('FACEBOOK_APP_SECRET'),
+            'fb_exchange_token=' . $token->access_token,
+        ];
+
+        $endPoint = 'oauth/access_token?' . implode('&', $params);
+        $response = $this->facebook->get($endPoint);
+
+        $user = $response->getDecodedBody();
+        $this->facebookRepository->updateAccessToken($token->user_page_id, $user['access_token']);
+
+        return $user['access_token'];
+    }
+
+    public function getLongLivedPageAccessToken()
+    {
+        $userToken = $this->facebookRepository->getUserApiToken();
+        $endPoint = $userToken->user_page_id . '/accounts?access_token=' . $userToken->access_token;
+
+        $this->facebook->setDefaultAccessToken($userToken->access_token);
+        $response = $this->facebook->get($endPoint);
+        
+        $data = $response->getDecodedBody();
+
+        foreach ($data['data'] as $token) {
+            $this->facebookRepository->updateAccessToken($token['id'], $token['access_token']);
+        }
+    }
+
 }

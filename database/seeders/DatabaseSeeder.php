@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-        $this->call(FacebookApiTokenSeeder::class);
+        // $this->call(FacebookApiTokenSeeder::class);
+        $this->call(InstagramApiTokenSeeder::class);
     }
 }

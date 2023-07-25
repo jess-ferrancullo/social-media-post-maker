@@ -8,6 +8,7 @@ export default defineConfig({
                 'resources/css/app.css',
                 'resources/js/app.js',
                 'resources/js/form.js',
+                'resources/js/facebook.js',
             ],
             refresh: true,
         }),

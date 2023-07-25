@@ -4,9 +4,14 @@
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight align-middle">
                 {{ __('Instagram Posts') }}
             </h2>
-            <a href="{{ route('instagram.posts.create') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
-                Create a Post
-            </a>
+            <div>
+                <a href="{{ route('instagram.facebook.connect') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
+                    Connect your IG account
+                </a>
+                <a href="{{ route('instagram.posts.create') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
+                    Create a Post
+                </a>
+            </div>
         </div>
         
         
@@ -24,7 +29,7 @@
                     </div>
                 @elseif (session()->has('fail'))
                     <div class="p-3 shadow sm:rounded-lg text-base font-semibold bg-red-300 mb-4">
-                        {{ session()->pull('success') }}
+                        {{ session()->pull('fail') }}
                     </div>
                 @endif
                 <div class="bg-white text-white dark:bg-gray-800 shadow sm:rounded-lg">
@@ -36,7 +41,7 @@
                             </div>
                         </div>
                         <div class="table-row-group">
-                            @foreach ($posts['data'] as $post)
+                            @foreach ($posts as $post)
                                 <div class="table-row bg-slate-600">
                                     <div class="table-cell p-3 border border-slate-700"  style="width:25%">{{ Carbon::parse($post['created_time'])->format('M j, Y g:i A') }}</div>
                                     <div class="table-cell p-3 border border-slate-700">

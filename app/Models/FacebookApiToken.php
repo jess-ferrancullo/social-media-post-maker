@@ -2,13 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class FacebookApiToken extends Model
 {
-    use HasFactory;
-
     public $table = 'facebook_api_tokens';
     public $timestamps = false;
 

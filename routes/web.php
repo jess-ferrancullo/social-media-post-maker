@@ -40,6 +40,8 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('instagram')->group(function () {
         Route::get('/posts', [InstagramController::class, 'index'])->name('instagram.posts.index');
+        Route::get('/connect', [InstagramController::class, 'connect'])->name('instagram.facebook.connect');
+        Route::post('/connect/store', [InstagramController::class, 'connectToFacebook'])->name('instagram.facebook.connect.store');
         Route::get('/posts/create', [InstagramController::class, 'create'])->name('instagram.posts.create');
         Route::post('/posts/store', [InstagramController::class, 'store'])->name('instagram.posts.store');
     });

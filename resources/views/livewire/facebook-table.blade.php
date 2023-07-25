@@ -5,7 +5,7 @@
         </div>
     @elseif (session()->has('fail'))
         <div class="p-3 shadow sm:rounded-lg text-base font-semibold bg-red-300 mb-4">
-            {{ session()->pull('success') }}
+            {{ session()->pull('fail') }}
         </div>
     @endif
     <div class="mb-4">

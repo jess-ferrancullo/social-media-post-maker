@@ -39,8 +39,8 @@ class FacebookApi
         return $this->api;
     }
 
-    public function setAccessToken($accessToken)
-    {
-        $this->api->setDefaultAccessToken($accessToken);
-    }
+    // public function setAccessToken($accessToken)
+    // {
+    //     $this->api->setDefaultAccessToken($accessToken);
+    // }
 }

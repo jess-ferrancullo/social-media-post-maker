@@ -4,9 +4,15 @@
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight align-middle">
                 {{ __('Create a Facebook Post') }}
             </h2>
-            <a href="javascript:void(0)" class="js-form-submit inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
-                Save
-            </a>
+            <div class="flex">
+                <p class="js-submitting-message hidden dark:text-white font-semibold text-sm py-2">
+                    Please wait while we are processing...
+                </p>
+                <button type="button" class="ms-3 js-form-submit inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
+                    Save
+                    <x-loader/>
+                </a>
+            </div>
         </div>
     </x-slot>
 
@@ -20,16 +26,16 @@
                             <x-input-label for="message" :value="__('Share anything!')" class="text-lg font-semibold" />
                             <textarea name="message" id="message" cols="65s" rows="10" class="mt-2 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm p-2">{{ old('message', $form->message) }}</textarea>
                         </div>
+                        
                         <div>
-                            <x-input-label for="link" :value="__('Add a link?')" class="text-lg font-semibold" />
-                            <x-text-input id="link" name="link" type="text" class="mt-1 block w-full" :value="old('link', $form->link)" required autofocus />
-                            <x-input-error class="mt-2" :messages="$errors->get('link')" />
-                        </div>
-                        <div>
-                            <x-input-label :value="__('Post with an image or video? (We cannot upload for now as Facebook cannot scrape files from local)')" class="text-lg font-semibold mb-4" /> 
+                            <x-input-label :value="__('Post with? (We cannot upload for now as Facebook cannot scrape files from local)')" class="text-lg font-semibold mb-4" /> 
                             <div class="flex items-center mb-2">
                                 <input checked id="none" type="radio" value="none" name="upload" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                 <label for="none" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">None</label>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <input id="link" type="radio" value="link" name="upload" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <label for="link" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Link</label>
                             </div>
                             <div class="flex items-center mb-2">
                                 <input id="image" type="radio" value="image" name="upload" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
@@ -39,6 +45,11 @@
                                 <input id="video" type="radio" value="video" name="upload" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                 <label for="video" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Video</label>
                             </div>
+                        </div>
+                        <div class="hidden js-link-input">
+                            <x-input-label for="link" :value="__('Your link ')" class="text-lg font-semibold" />
+                            <x-text-input id="link" name="link" type="text" class="mt-1 block w-full" :value="old('link', $form->link)" required autofocus />
+                            <x-input-error class="mt-2" :messages="$errors->get('link')" />
                         </div>
                         {{-- <div>
                             <x-input-label for="upload" :value="__('Post with a Picture?')" class="text-lg font-semibold" />
@@ -52,3 +63,4 @@
         </div>
     </div>
 </x-app-layout>
+@vite('resources/js/facebook.js');

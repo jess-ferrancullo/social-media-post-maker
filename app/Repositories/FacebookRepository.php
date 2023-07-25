@@ -22,6 +22,22 @@ class FacebookRepository
         return FacebookApiToken::where('is_active', '1')->first();
     }
 
+    public function getUserApiToken(): FacebookApiToken
+    {
+        return FacebookApiToken::where('type', 'user')->first();
+    }
+
+    public function updateAccessToken(string $userPageId, string $accessToken): void
+    {
+        FacebookApiToken::where('user_page_id', $userPageId)
+            ->update(['access_token' => $accessToken]);
+    }
+
+    public function getAccessTokenByPage(string $userPageId): ?FacebookApiToken
+    {
+        return FacebookApiToken::where('user_page_id', $userPageId)->first();
+    }
+
     public function setActivePage(string $pageId): void
     {
         FacebookApiToken::where('is_active', '1')->update(['is_active' => '0']);

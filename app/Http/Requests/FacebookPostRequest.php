@@ -27,7 +27,7 @@ class FacebookPostRequest extends FormRequest
             'link' => ['nullable', 'active_url'],
             'message' => ['required'],
             // 'upload' => ['nullable', 'file', 'mimes:mp4,mov'],
-            'upload' => ['required', Rule::in(['none','image','video'])],
+            'upload' => ['required', Rule::in(['none','image','video', 'link'])],
         ];
     }
 }

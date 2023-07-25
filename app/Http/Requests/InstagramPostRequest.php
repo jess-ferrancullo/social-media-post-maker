@@ -24,10 +24,10 @@ class InstagramPostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'message' => ['required'],
+            'caption' => ['required'],
             // 'upload' => ['nullable', 'file', 'mimes:mp4,mov'],
-            'upload' => ['required'],
-            'post_type' => ['required', Rule::in(['wall', 'story', 'reel'])],
+            'file_type' => ['required'],
+            'post_type' => ['required'],
         ];
     }
 }
