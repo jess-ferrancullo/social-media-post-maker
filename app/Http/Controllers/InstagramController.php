@@ -19,9 +19,8 @@ class InstagramController extends Controller
     
     public function index(Request $request)
     {
-        $posts = $this->instagramService->getInstagramPosts();
-        // dd($posts);
-        return view('instagram.index', ['posts' => []]);
+        $posts = $this->instagramService->getInstagramPostsDummy();
+        return view('instagram.index', ['posts' => $posts]);
     }
 
     public function create()
@@ -33,7 +32,7 @@ class InstagramController extends Controller
     public function store(InstagramPostRequest $request)
     {
         try {
-            $this->instagramService->post($request->all());
+            // $this->instagramService->post($request->all());
             Session::flash('success', 'Your post is now being processed, please wait a few moments and refresh your page in order to see your new post here. Also check in your Instagram if your post shows up');
         } catch (Exception $e) {
             Log::error($e->getMessage(), $e);
@@ -54,7 +53,6 @@ class InstagramController extends Controller
 
     public function connectToFacebook(Request $request)
     {
-        // dd($request->get('page_id'));
         try {
             $this->instagramService->connectFacebookToInstagram($request->get('page_id'));
             Session::flash('success', 'Successfully connected your instagram account to your facebook page');
@@ -65,6 +63,5 @@ class InstagramController extends Controller
         }
         
         return redirect()->route('instagram.posts.index');
-        # code...
     }
 }

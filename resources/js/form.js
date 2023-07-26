@@ -6,6 +6,5 @@ $(function() {
 
         $(this).get(0).firstChild.nodeValue = "SAVING";
         $(this).prop('disabled', true);
-
     })
 })

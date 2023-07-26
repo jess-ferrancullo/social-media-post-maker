@@ -25,6 +25,7 @@
                         <div>
                             <x-input-label for="message" :value="__('Share anything!')" class="text-lg font-semibold" />
                             <textarea name="message" id="message" cols="65s" rows="10" class="mt-2 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm p-2">{{ old('message', $form->message) }}</textarea>
+                            <x-input-error class="text-sm font-semibold " :messages="$errors->get('message')" />
                         </div>
                         
                         <div>
@@ -49,7 +50,7 @@
                         <div class="hidden js-link-input">
                             <x-input-label for="link" :value="__('Your link ')" class="text-lg font-semibold" />
                             <x-text-input id="link" name="link" type="text" class="mt-1 block w-full" :value="old('link', $form->link)" required autofocus />
-                            <x-input-error class="mt-2" :messages="$errors->get('link')" />
+                            <x-input-error class="text-sm font-semibold mt-2" :messages="$errors->get('link')" />
                         </div>
                         {{-- <div>
                             <x-input-label for="upload" :value="__('Post with a Picture?')" class="text-lg font-semibold" />

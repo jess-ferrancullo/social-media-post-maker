@@ -9,6 +9,7 @@ export default defineConfig({
                 'resources/js/app.js',
                 'resources/js/form.js',
                 'resources/js/facebook.js',
+                'resources/js/instagram.js',
             ],
             refresh: true,
         }),

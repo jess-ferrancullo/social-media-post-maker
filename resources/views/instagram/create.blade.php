@@ -25,12 +25,8 @@
                         <div>
                             <x-input-label for="caption" :value="__('Caption for you post')" class="text-lg font-semibold" />
                             <textarea name="caption" id="caption" cols="65s" rows="10" class="mt-2 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm p-2">{{ old('caption', $form->caption) }}</textarea>
+                            <x-input-error class="text-sm font-semibold" :messages="$errors->get('caption')" />
                         </div>
-                        {{-- <div>
-                            <x-input-label for="link" :value="__('Add a link?')" class="text-lg font-semibold" />
-                            <x-text-input id="link" name="link" type="text" class="mt-1 block w-full" :value="old('link', $form->link)" required autofocus />
-                            <x-input-error class="mt-2" :messages="$errors->get('link')" />
-                        </div> --}}
                         <div>
                             <x-input-label :value="__('Post with an image or video? ')" class="text-lg font-semibold" /> 
                             <p class="text-sm mb-4">
@@ -45,40 +41,33 @@
                                 <input id="video" type="radio" value="VIDEO" name="file_type" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                 <label for="video" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Video</label>
                             </div>
-                            {{-- <div class="flex items-center">
-                                <input id="mixed" type="radio" value="mixed" name="upload" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                <label for="mixed" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Multiple (This will become carousel and cannot be posted as story or reel)</label>
-                            </div> --}}
+                            <x-input-error class="text-sm font-semibold" :messages="$errors->get('file_type')" />
                         </div>
 
                         <div>
                             <x-input-label :value="__('Post this as?')" class="text-lg font-semibold mb-4" /> 
                             <div class="flex items-center mb-2">
-                                <input selected id="wall" type="radio" value="FEED" name="post_type" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                <label for="wall" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Single Post (If you select video, IG will make it a reel)</label>
-                            </div>
-                            <div class="flex items-center mb-2">
                                 <input id="story" type="radio" value="STORIES" name="post_type" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                 <label for="story" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Story</label>
                             </div>
                             <div class="flex items-center mb-2">
+                                <input id="wall" type="radio" value="FEED" name="post_type" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <label for="wall" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">To my feed</label>
+                            </div>
+                            <div class="flex items-center mb-2">
                                 <input id="reel" type="radio" value="REELS" name="post_type" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                <label for="reel" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Reel (Only available for video)</label>
+                                <label for="reel" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Reel</label>
                             </div>
-                            <div class="flex items-center">
+                            <div class="flex items-center mb-2">
                                 <input id="carousel" type="radio" value="CAROUSEL" name="post_type" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                <label for="carousel" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Carousel (I will post multiple medias)</label>
+                                <label for="carousel" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">To my feed (Carousel - I will post multiple medias)</label>
                             </div>
+                            <x-input-error class="text-sm font-semibold" :messages="$errors->get('post_type')" />
                         </div>
-                        {{-- <div>
-                            <x-input-label for="upload" :value="__('Post with a Picture?')" class="text-lg font-semibold" />
-                            <input type="file" id="upload" name="upload" class='mt-1 py-1 block w-full text-white border border-gray-300 rounded-md cursor-pointer dark:bg-gray-900 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400'>
-                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-300" id="file_input_help">SVG, PNG, JPG or GIF (MAX. 800x400px).</p>
-                            <x-input-error class="mt-2" :messages="$errors->get('profile_picture')" />
-                        </div> --}}
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </x-app-layout>
+@vite('resources/js/instagram.js')
