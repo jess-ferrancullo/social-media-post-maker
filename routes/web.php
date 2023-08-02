@@ -3,6 +3,7 @@
 use App\Http\Controllers\FacebookController;
 use App\Http\Controllers\InstagramController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TwitterController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -44,6 +45,12 @@ Route::middleware('auth')->group(function () {
         Route::post('/connect/store', [InstagramController::class, 'connectToFacebook'])->name('instagram.facebook.connect.store');
         Route::get('/posts/create', [InstagramController::class, 'create'])->name('instagram.posts.create');
         Route::post('/posts/store', [InstagramController::class, 'store'])->name('instagram.posts.store');
+    });
+
+    Route::prefix('twitter')->group(function () {
+        Route::get('/tweets', [TwitterController::class, 'index'])->name('twitter.tweets.index');
+        Route::get('/tweets/create', [TwitterController::class, 'create'])->name('twitter.tweets.create');
+        Route::post('/tweets/store', [TwitterController::class, 'store'])->name('twitter.tweets.store');
     });
 });
 

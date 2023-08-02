@@ -21,6 +21,9 @@
                     <x-nav-link :href="route('instagram.posts.index')" :active="request()->routeIs('instagram.*')">
                         {{ __('Instagram Posts') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('twitter.tweets.index')" :active="request()->routeIs('twitter.*')">
+                        {{ __('Twitter Tweets') }}
+                    </x-nav-link>
                 </div>
             </div>
 
