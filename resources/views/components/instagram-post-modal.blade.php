@@ -15,12 +15,12 @@
                 </button>
             </div>
             <!-- Modal body -->
-            <div class="p-6 space-y-6 flex">
+            <div class="p-6 space-y-4 flex">
                 <img attr="" id="js-modal-img" class="w-136 h-136 object-cover hidden" alt="">
                 <video src="" id="js-modal-vid" class="w-136 h-136 object-cover hidden" controls alt=""></video>
                 
                 <div class="ms-4">
-                    <p id="js-modal-caption"  class="text-base leading-relaxed text-gray-500 dark:text-gray-400 ">
+                    <p id="js-modal-caption"  class="text-base leading-relaxed text-gray-500 dark:text-white ">
                         With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.
                     </p>
                 

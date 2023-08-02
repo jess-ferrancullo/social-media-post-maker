@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\File;
 
 class InstagramPostRequest extends FormRequest
 {
@@ -24,10 +25,9 @@ class InstagramPostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'caption' => ['required'],
-            // 'upload' => ['nullable', 'file', 'mimes:mp4,mov'],
-            'file_type' => ['required'],
-            'post_type' => ['required'],
+            'caption' => ['required_unless:post_type,STORIES'],
+            'uploads' => ['required', 'max:4'],
+            'uploads.*' => ['nullable', File::types(['mp4', 'jpeg', 'jpg', 'png'])],
         ];
     }
 }

@@ -19,10 +19,8 @@ class InstagramMediaPublishedChecker implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    // public $timeout = 120;
     public $tries = 10;
     public $backoff = 60;
-    // public $instagramApi;
 
     private const MEDIA_IN_PROGRESS = 'IN_PROGRESS';
     private const MEDIA_FINISHED = 'FINISHED';
@@ -46,13 +44,15 @@ class InstagramMediaPublishedChecker implements ShouldQueue
         foreach ($this->data['container_ids'] as $containerId) {
             $endpoint = $containerId . '?fields=status_code';
             $response = $instagramApi->get($endpoint);
-            // dd($response);
             $status = $response->getDecodedBody()['status_code'];
 
             $finishedUploading = ($status == self::MEDIA_FINISHED);
+            Log::info("Request Container ID : " . $containerId);
             Log::info("Status of media : " . $status . PHP_EOL . json_encode($response->getDecodedBody()));
 
-            if (!$finishedUploading) {
+            if ($status === 'ERROR') {
+                $this->fail('There was an error in publishing some of the files');
+            } else if (!$finishedUploading) {
                 throw new Exception('Media is still in progress, we cannot publish the post yet');
             }
         }

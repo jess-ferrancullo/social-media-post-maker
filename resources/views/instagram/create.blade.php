@@ -28,41 +28,21 @@
                             <x-input-error class="text-sm font-semibold" :messages="$errors->get('caption')" />
                         </div>
                         <div>
-                            <x-input-label :value="__('Post with an image or video? ')" class="text-lg font-semibold" /> 
-                            <p class="text-sm mb-4">
-                                (We cannot upload for now as Instagram cannot scrape files from local.<br>
-                                Were just gonna use programmatically upload using online images for now)
-                            </p>
-                            <div class="flex items-center mb-2">
-                                <input selected id="image" type="radio" value="IMAGE" name="file_type" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                <label for="image" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Image</label>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <input id="video" type="radio" value="VIDEO" name="file_type" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                <label for="video" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Video</label>
-                            </div>
-                            <x-input-error class="text-sm font-semibold" :messages="$errors->get('file_type')" />
+                            <x-input-label :value="__('Upload files')" class="text-lg font-semibold" /> 
+                            <input type="file" id="uploads" multiple name="uploads[]" accept="image/png,image/jpg,image/jpeg,video/mp4" class='mt-1 py-1 block w-full text-white border border-gray-300 rounded-md cursor-pointer dark:bg-gray-900 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400'>
+                            {{-- <p class="mt-1 text-xs text-gray-500 dark:text-gray-300" id="file_input_help"></p> --}}
+                            @if ($errors->has('uploads'))
+                                <x-input-error class="mt-2" :messages="$errors->get('uploads')" />
+                            @endif
+                            @if ($errors->has('uploads.*'))
+                                <x-input-error class="mt-2" :messages="['Supported file types: mp4, jpeg, jpeg, png']" />
+                            @endif
                         </div>
-
                         <div>
-                            <x-input-label :value="__('Post this as?')" class="text-lg font-semibold mb-4" /> 
                             <div class="flex items-center mb-2">
-                                <input id="story" type="radio" value="STORIES" name="post_type" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                <label for="story" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Story</label>
+                                <input id="story" type="checkbox" value="STORIES" name="post_type" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <label for="story" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Post as story</label>
                             </div>
-                            <div class="flex items-center mb-2">
-                                <input id="wall" type="radio" value="FEED" name="post_type" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                <label for="wall" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">To my feed</label>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <input id="reel" type="radio" value="REELS" name="post_type" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                <label for="reel" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Reel</label>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <input id="carousel" type="radio" value="CAROUSEL" name="post_type" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                <label for="carousel" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">To my feed (Carousel - I will post multiple medias)</label>
-                            </div>
-                            <x-input-error class="text-sm font-semibold" :messages="$errors->get('post_type')" />
                         </div>
                     </form>
                 </div>

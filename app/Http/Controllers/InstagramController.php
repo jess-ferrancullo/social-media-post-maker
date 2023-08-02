@@ -17,9 +17,9 @@ class InstagramController extends Controller
         private FacebookService $facebookService,
     ){ }
     
-    public function index(Request $request)
+    public function index()
     {
-        $posts = $this->instagramService->getInstagramPostsDummy();
+        $posts = $this->instagramService->getInstagramPosts();
         return view('instagram.index', ['posts' => $posts]);
     }
 
@@ -32,10 +32,10 @@ class InstagramController extends Controller
     public function store(InstagramPostRequest $request)
     {
         try {
-            // $this->instagramService->post($request->all());
+            $this->instagramService->post($request->all());
             Session::flash('success', 'Your post is now being processed, please wait a few moments and refresh your page in order to see your new post here. Also check in your Instagram if your post shows up');
         } catch (Exception $e) {
-            Log::error($e->getMessage(), $e);
+            Log::error($e->getMessage());
             Session::flash('fail', 'There was a problem while posting... Please try again later.');
         }
         
