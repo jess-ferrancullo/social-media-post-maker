@@ -29,39 +29,51 @@
                         </div>
                         
                         <div>
-                            <x-input-label :value="__('Post with? (We cannot upload for now as Facebook cannot scrape files from local)')" class="text-lg font-semibold mb-4" /> 
+                            {{-- <x-input-label :value="__('Post with? (We cannot upload for now as Facebook cannot scrape files from local)')" class="text-lg font-semibold mb-4" />  --}}
+                            <x-input-label :value="__('Post with?')" class="text-lg font-semibold mb-4" /> 
                             <div class="flex items-center mb-2">
-                                <input checked id="none" type="radio" value="none" name="upload" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <input {{ old('upload', '') == 'none' ? 'checked' : ''}} id="none" type="radio" value="none" name="upload" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                 <label for="none" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">None</label>
                             </div>
                             <div class="flex items-center mb-2">
-                                <input id="link" type="radio" value="link" name="upload" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <input {{ old('upload', '')  == 'link' ? 'checked' : ''}} id="link" type="radio" value="link" name="upload" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                 <label for="link" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Link</label>
                             </div>
                             <div class="flex items-center mb-2">
-                                <input id="image" type="radio" value="image" name="upload" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <input {{ old('upload', '') == 'image' ? 'checked' : ''}} id="image" type="radio" value="image" name="upload" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                 <label for="image" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Image</label>
                             </div>
                             <div class="flex items-center">
-                                <input id="video" type="radio" value="video" name="upload" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                <label for="video" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Video</label>
+                                <input {{ old('upload', '')  == 'video' ? 'checked' : ''}} id="video" type="radio" value="video" name="upload" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <label for="video" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Video / GIF</label>
                             </div>
                         </div>
-                        <div class="hidden js-link-input">
+                        <div class="js-link-input {{ old('upload', '')  !== 'link' ? 'hidden' : ''}}">
                             <x-input-label for="link" :value="__('Your link ')" class="text-lg font-semibold" />
                             <x-text-input id="link" name="link" type="text" class="mt-1 block w-full" :value="old('link', $form->link)" required autofocus />
                             <x-input-error class="text-sm font-semibold mt-2" :messages="$errors->get('link')" />
                         </div>
-                        {{-- <div>
-                            <x-input-label for="upload" :value="__('Post with a Picture?')" class="text-lg font-semibold" />
-                            <input type="file" id="upload" name="upload" class='mt-1 py-1 block w-full text-white border border-gray-300 rounded-md cursor-pointer dark:bg-gray-900 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400'>
-                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-300" id="file_input_help">SVG, PNG, JPG or GIF (MAX. 800x400px).</p>
-                            <x-input-error class="mt-2" :messages="$errors->get('profile_picture')" />
-                        </div> --}}
+                        <div class="js-video-upload {{ old('upload', '')  !== 'video' ? 'hidden' : ''}}">
+                            <x-input-label for="media_video" :value="__('Upload a Video / GIF')" class="text-lg font-semibold" />
+                            <input type="file" id="media_video" name="media_video" accept="video/*,image/gif" class='mt-1 py-1 block w-full text-white border border-gray-300 rounded-md cursor-pointer dark:bg-gray-900 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400'>
+                            @if ($errors->has('media_video'))
+                                <x-input-error class="mt-2" :messages="['Supported file types: mp4, mov, gif']" />
+                            @endif
+                        </div>
+                        <div class="js-image-upload {{ old('upload', '')  !== 'image' ? 'hidden' : ''}}">
+                            <x-input-label for="media_images" :value="__('Upload an Image')" class="text-lg font-semibold" />
+                            <input type="file" id="media_images" multiple name="media_images[]" accept="image/*" class='mt-1 py-1 block w-full text-white border border-gray-300 rounded-md cursor-pointer dark:bg-gray-900 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400'>
+                            @if ($errors->has('media_images'))
+                                <x-input-error class="mt-2" :messages="$errors->get('media_images')" />
+                            @endif
+                            @if ($errors->has('media_images.*'))
+                                <x-input-error class="mt-2" :messages="['Supported file types: jpg, jpeg, gif, png']" />
+                            @endif
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </x-app-layout>
-@vite('resources/js/facebook.js');
+@vite('resources/js/facebook.js')

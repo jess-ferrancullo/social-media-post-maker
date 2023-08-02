@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\File;
 
 class FacebookPostRequest extends FormRequest
 {
@@ -24,10 +25,19 @@ class FacebookPostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'link' => ['nullable', 'active_url'],
             'message' => ['required'],
-            // 'upload' => ['nullable', 'file', 'mimes:mp4,mov'],
             'upload' => ['required', Rule::in(['none','image','video', 'link'])],
+            'link' => ['required_if:upload,link', 'nullable', 'active_url'],
+            'media_images' => ['required_if:upload,image', 'nullable', 'max:10'],
+            'media_images.*' => ['required_if:upload,image', 'nullable', 'image'],
+            'media_video' => ['required_if:upload,video', 'nullable', File::types(['mp4', 'mov', 'gif'])],
+        ];
+    }
+    
+    public function messages(): array
+    {
+        return [
+            'media_images.max' => 'Only maximum of 10 images can be uploaded',
         ];
     }
 }

@@ -15,9 +15,10 @@ class FacebookController extends Controller
     function __construct(private FacebookService $facebookService)
     {}
 
-    public function index(Request $request)
+    public function index()
     {
-        $posts = $this->facebookService->getFacebookPosts();
+        // $posts = $this->facebookService->getFacebookPosts();
+        $posts = [];
         $pages = $this->facebookService->getFacebookPages();
 
         return view('facebook.index', [
