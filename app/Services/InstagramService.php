@@ -6,14 +6,14 @@ use App\Jobs\InstagramMediaPublishedChecker;
 use App\Repositories\FacebookRepository;
 use App\Repositories\InstagramRepository;
 use App\SingleTons\FacebookApi;
-use App\Traits\Upload;
+use App\Traits\UploadToBucket;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class InstagramService
 {
-    use Upload;
+    use UploadToBucket;
 
     private $instagram;
 
@@ -33,18 +33,20 @@ class InstagramService
         $this->instagram = FacebookApi::getInstance()->getApi();
     }
 
+    /**
+     * Uploading to instagram has delay so we need to use Job
+     */
     public function post(array $requestData): void
     {
-        # code...
         $apiToken = $this->instagramRepository->getApiToken();
 
         $caption = $requestData['caption'] ?? '';
         $isStory = isset($requestData['post_type']);
-        $isCarousel = (count($requestData['uploads'])) && !$isStory;
+        $isCarousel = (count($requestData['uploads']) > 1) && !$isStory;
         
         $responses = [];
         foreach ($requestData['uploads'] as $file) {
-            $filePath = $this->saveImage($file, 'instagram');
+            $filePath = $this->uploadToBucket($file, 'instagram');
             $responses[] = $this->uploadMedia($filePath, $caption, $isCarousel, $isStory);
         }
 
@@ -110,7 +112,7 @@ class InstagramService
         return $response->getDecodedBody();
     }
 
-    public function publishToInstagram(array $mediaPayload)
+    public function publishToInstagram(array $mediaPayload): array
     {
         if (!$mediaPayload['is_carousel']) {
             return $this->publishPost($mediaPayload);
@@ -119,16 +121,17 @@ class InstagramService
         return $this->publishCarousel($mediaPayload);
     }
 
-    public function publishPost(array $params) {
+    public function publishPost(array $params): array
+    {
         $endPoint =  '/' . $params['instagram_business_account'] . '/media_publish';
         $params = ['creation_id' =>  $params['container_ids'][0]];
 
         $response = $this->instagram->post($endPoint, $params);
 
-        return $response;
+        return $response->getDecodedBody();
     }
 
-    public function publishCarousel(array $params)
+    public function publishCarousel(array $params): array
     {
         $endPoint = '/' . $params['instagram_business_account'] . '/media';
         $params = [
@@ -144,10 +147,10 @@ class InstagramService
 
         $response = $this->instagram->post($endPoint, $params);
 
-        return $response;
+        return $response->getDecodedBody();
     }
 
-    public function connectFacebookToInstagram(string $facebookPageId)
+    public function connectFacebookToInstagram(string $facebookPageId): bool
     {
         $facebookPage = $this->facebookRepository->getAccessTokenByPage($facebookPageId);
 
@@ -163,10 +166,10 @@ class InstagramService
             'access_token' => $facebookPage->access_token,
         ];
 
-        $this->instagramRepository->save($data);
+        return $this->instagramRepository->save($data);
     }
 
-    public function getInstagramPosts()
+    public function getInstagramPosts(): array
     {
         $params = [
             'caption',

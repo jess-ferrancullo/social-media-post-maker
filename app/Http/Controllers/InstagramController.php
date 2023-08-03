@@ -6,9 +6,11 @@ use App\Http\Requests\InstagramPostRequest;
 use App\Services\FacebookService;
 use App\Services\InstagramService;
 use Exception;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use Illuminate\View\View;
 
 class InstagramController extends Controller
 {
@@ -17,19 +19,18 @@ class InstagramController extends Controller
         private FacebookService $facebookService,
     ){ }
     
-    public function index()
+    public function index(): View
     {
         $posts = $this->instagramService->getInstagramPosts();
         return view('instagram.index', ['posts' => $posts]);
     }
 
-    public function create()
+    public function create(): View
     {
         return view('instagram.create', ['form' => new InstagramPostRequest()]);
-        # code...
     }
 
-    public function store(InstagramPostRequest $request)
+    public function store(InstagramPostRequest $request): RedirectResponse
     {
         try {
             $this->instagramService->post($request->all());
@@ -44,14 +45,14 @@ class InstagramController extends Controller
 
     // ---- Pages to Connect Facebook To Instagram ---- //
 
-    public function connect()
+    public function connect(): View
     {
-        $facebookPages = $this->facebookService->getFacebookPages();
-        return view('instagram.connect', ['pages' => $facebookPages]);
-        # code...
+        return view('instagram.connect', [
+            'pages' => $this->facebookService->getFacebookPages()
+        ]);
     }
 
-    public function connectToFacebook(Request $request)
+    public function connectToFacebook(Request $request): RedirectResponse
     {
         try {
             $this->instagramService->connectFacebookToInstagram($request->get('page_id'));

@@ -5,10 +5,9 @@ namespace App\Traits;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 
-trait Upload
+trait UploadToBucket
 {
-
-    public function saveImage(UploadedFile $file, string $socialMedia): string
+    public function uploadToBucket(UploadedFile $file, string $socialMedia): string
     {
         $filename = $file->hashName();
         $path = "/public/$socialMedia/uploads/";
@@ -23,5 +22,4 @@ trait Upload
 
         return $path . $filename;
     }
-
 }

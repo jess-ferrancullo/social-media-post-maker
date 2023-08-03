@@ -3,11 +3,11 @@
 namespace App\Services;
 
 use App\Jobs\TwitterMediaPoster;
-use App\Traits\Upload;
+use App\Traits\UploadToBucket;
 
 class TwitterService
 {
-    use Upload;
+    use UploadToBucket;
 
     private $twitterApi;
 
@@ -27,7 +27,7 @@ class TwitterService
         if (isset($requestData['media'])) {
             foreach ($requestData['media'] as $file) {
                 $mime = $file->getmimeType();
-                $path = $this->saveImage($file, 'twitter');
+                $path = $this->uploadToBucket($file, 'twitter');
                 $mediaParam = [
                     'path' => $path,
                     'type' => $mime,

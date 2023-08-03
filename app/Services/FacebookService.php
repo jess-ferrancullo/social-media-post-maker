@@ -4,14 +4,14 @@ namespace App\Services;
 
 use App\Repositories\FacebookRepository;
 use App\SingleTons\FacebookApi;
-use App\Traits\Upload;
+use App\Traits\UploadToBucket;
 use Exception;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 class FacebookService
 {
-    use Upload;
+    use UploadToBucket;
 
     private $facebook;
 
@@ -55,7 +55,7 @@ class FacebookService
         $endPoint = "/" . $token->user_page_id . "/photos";
 
         foreach ($images as $index => $image) {
-            $path = $this->saveImage($image, 'facebook');
+            $path = $this->uploadToBucket($image, 'facebook');
             $params = [
                 'url' => Storage::url($path),
                 'message' => 'Image # ' . ($index + 1),
@@ -78,7 +78,7 @@ class FacebookService
 
     public function postVideo(UploadedFile $file, array $requestParams)
     {
-        $path = $this->saveImage($file, 'facebook');
+        $path = $this->uploadToBucket($file, 'facebook');
 
         $params = [
             'title' => 'sample video',

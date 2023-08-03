@@ -29,13 +29,16 @@ class FacebookRepository
 
     public function updateAccessToken(string $userPageId, string $accessToken): void
     {
-        FacebookApiToken::where('user_page_id', $userPageId)
+        FacebookApiToken::query()
+            ->where('user_page_id', $userPageId)
             ->update(['access_token' => $accessToken]);
     }
 
     public function getAccessTokenByPage(string $userPageId): ?FacebookApiToken
     {
-        return FacebookApiToken::where('user_page_id', $userPageId)->first();
+        return FacebookApiToken::query()
+            ->where('user_page_id', $userPageId)
+            ->first();
     }
 
     public function setActivePage(string $pageId): void

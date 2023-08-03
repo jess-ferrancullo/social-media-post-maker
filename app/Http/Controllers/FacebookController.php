@@ -6,19 +6,19 @@ use App\Http\Requests\FacebookPostRequest;
 use App\Http\Requests\PageTokenRequest;
 use App\Services\FacebookService;
 use Exception;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use Illuminate\View\View;
 
 class FacebookController extends Controller
 {
     function __construct(private FacebookService $facebookService)
     {}
 
-    public function index()
+    public function index(): View
     {
-        // $posts = $this->facebookService->getFacebookPosts();
-        $posts = [];
+        $posts = $this->facebookService->getFacebookPosts();
         $pages = $this->facebookService->getFacebookPages();
 
         return view('facebook.index', [
@@ -27,12 +27,12 @@ class FacebookController extends Controller
         ]);
     }
 
-    public function create()
+    public function create(): View
     {
         return view('facebook.create', ['form' => new FacebookPostRequest]);
     }
 
-    public function store(FacebookPostRequest $request)
+    public function store(FacebookPostRequest $request): RedirectResponse
     {
         try {
             $this->facebookService->post($request->all());
@@ -45,12 +45,12 @@ class FacebookController extends Controller
         return redirect()->route('facebook.posts.index');
     }
 
-    public function createPageToken()
+    public function createPageToken(): View
     {
         return view('facebook.page-token.create', ['form' => new PageTokenRequest()]);
     }
 
-    public function savePageToken(PageTokenRequest $request)
+    public function savePageToken(PageTokenRequest $request): RedirectResponse
     {
         $this->facebookService->savePageToken($request->validated());
         Session::flash('success', 'Successfully Created new Facebook Token');
