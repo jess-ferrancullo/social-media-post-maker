@@ -10,6 +10,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class TwitterMediaPoster implements ShouldQueue
 {
@@ -56,6 +57,9 @@ class TwitterMediaPoster implements ShouldQueue
                 $mediaIds['media_ids'][] = $uploaded['media_id_string'];
                 Log::info("response data: ", $uploaded);
             }
+
+            // aleady uploaded to Twitter, file has no use anymore
+            Storage::delete($media['path']);
         }
 
         $params = ['text' => $this->data['text']];

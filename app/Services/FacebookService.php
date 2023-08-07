@@ -7,6 +7,7 @@ use App\SingleTons\FacebookApi;
 use App\Traits\UploadToBucket;
 use Exception;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class FacebookService
@@ -45,6 +46,7 @@ class FacebookService
         $endPoint = "/" . $token->user_page_id . "/feed";
         $response = $this->facebook->post($endPoint, $params);
 
+        Log::info("FB post responses: ", $response->getDecodedBody());
         return $response->getDecodedBody();
     }
 
@@ -54,6 +56,7 @@ class FacebookService
         $token = $this->facebookRepository->getActiveApiToken();
         $endPoint = "/" . $token->user_page_id . "/photos";
 
+        $paths = [];
         foreach ($images as $index => $image) {
             $path = $this->uploadToBucket($image, 'facebook');
             $params = [
@@ -62,6 +65,7 @@ class FacebookService
                 'published' => false,
             ];
 
+            $paths[] = $path;
             $imagePostRequests[] = $this->facebook->request('POST', $endPoint, $params);
         }
 
@@ -69,8 +73,12 @@ class FacebookService
         $imageIds = [];
 
         foreach ($uploadedImages as $image) {
+            Log::info("FB image upload responses: ", $image->getDecodedBody());
             $imageIds[] = $image->getDecodedBody()['id'];
         }
+
+        // aleady uploaded to FB, file has no use anymore
+        Storage::delete($paths);
 
         return $imageIds;
     }
@@ -92,6 +100,9 @@ class FacebookService
         $endPoint = "/" . $token->user_page_id . "/videos";
         $response = $this->facebook->post($endPoint, $params);
 
+        // aleady uploaded to FB, file has no use anymore
+        Storage::delete($path);
+        Log::info("FB video post responses: ", $response->getDecodedBody());
         return $response->getDecodedBody();
     }
 
@@ -104,6 +115,7 @@ class FacebookService
             $endPoint = "/" . $token->user_page_id . "/feed?fields=permalink_url,message,created_time";
             $posts = $this->facebook->get($endPoint)->getDecodedBody();
         } catch (Exception $e) {
+            Log::error($e->getMessage());
             return [];
         }
 

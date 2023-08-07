@@ -8,6 +8,7 @@ use App\Repositories\InstagramRepository;
 use App\SingleTons\FacebookApi;
 use App\Traits\UploadToBucket;
 use Exception;
+use Facebook\FacebookRequest;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -45,9 +46,18 @@ class InstagramService
         $isCarousel = (count($requestData['uploads']) > 1) && !$isStory;
         
         $responses = [];
+        $mediaRequests = [];
         foreach ($requestData['uploads'] as $file) {
             $filePath = $this->uploadToBucket($file, 'instagram');
-            $responses[] = $this->uploadMedia($filePath, $caption, $isCarousel, $isStory);
+            $mediaRequests[] = $this->uploadMedia($filePath, $caption, $isCarousel, $isStory);
+            // $responses[] = $this->uploadMedia($filePath, $caption, $isCarousel, $isStory);
+        }
+
+        $mediaResponses = $this->instagram->sendBatchRequest($mediaRequests);
+
+        foreach ($mediaResponses as $mediaResponse) {
+            Log::info("Instagram Media upload responses: ", $mediaResponse->getDecodedBody());
+            $mediaIds[] = $mediaResponse->getDecodedBody()['id'];
         }
 
         $payload = [
@@ -59,12 +69,12 @@ class InstagramService
 
         try {
             if ($isStory) {
-                foreach($responses as $response) {
-                    $payload['container_ids'] = [$response['id']];
+                foreach($mediaIds as $id) {
+                    $payload['container_ids'] = [$id];
                     InstagramMediaPublishedChecker::dispatch($payload)->delay(10);
                 }
             } else {
-                $payload['container_ids'] = array_column($responses, 'id');
+                $payload['container_ids'] = $mediaIds;
                 InstagramMediaPublishedChecker::dispatch($payload)->delay(30);
             }
         } catch(Exception $e) {
@@ -81,7 +91,7 @@ class InstagramService
         string $caption, 
         $isCarousel = false,
         $isStory = false, 
-    ): array {
+    ): FacebookRequest {
         $fileUrl = Storage::url($path);
         $mime = Storage::mimeType($path);
 
@@ -104,12 +114,7 @@ class InstagramService
         $this->instagram->setDefaultAccessToken($apiToken->access_token);
 
         $endPoint = '/' . $apiToken->instagram_business_account . '/media';
-        $response = $this->instagram->post($endPoint, $params);
-
-        Log::info('Upload Request: ', $params);
-        Log::info('Upload Response: ', $response->getDecodedBody());
-
-        return $response->getDecodedBody();
+        return $this->instagram->request('POST', $endPoint, $params);
     }
 
     public function publishToInstagram(array $mediaPayload): array
@@ -140,14 +145,19 @@ class InstagramService
             'children' => $params['container_ids'],
         ];
         
-        $carouselRequest = $this->instagram->post($endPoint, $params);
+        try {
+            $carouselRequest = $this->instagram->post($endPoint, $params);
 
-        $endPoint .= '_publish';
-        $params['creation_id'] = $carouselRequest->getDecodedBody()['id'];
+            $endPoint .= '_publish';
+            $params['creation_id'] = $carouselRequest->getDecodedBody()['id'];
+    
+            $response = $this->instagram->post($endPoint, $params);
 
-        $response = $this->instagram->post($endPoint, $params);
-
-        return $response->getDecodedBody();
+            return $response->getDecodedBody();
+        } catch (Exception $e) {
+            Log::error($e->getMessage(), $params);
+            throw $e;
+        }
     }
 
     public function connectFacebookToInstagram(string $facebookPageId): bool
