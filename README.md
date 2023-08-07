@@ -46,6 +46,19 @@
 - Regerenate the Access tokens and check if it has read and write
 - Add the keys to your env
 
+## Samples
+![twitter_post](https://github.com/spice-factory-ph/social-media-post-maker/assets/125238237/005a6f00-90c6-4d17-afbf-e53608a52d49)
+![fb_post](https://github.com/spice-factory-ph/social-media-post-maker/assets/125238237/a20396a6-7963-4fd1-964b-8efcaccf0977)
+![insta_post](https://github.com/spice-factory-ph/social-media-post-maker/assets/125238237/fcc18bf1-97ec-45cf-b839-733c25ab1fce)
+
+## Tech Stack
+- Laravel 10
+- Laravel sail
+- Laravel Livewire
+- Tailwind CSS
+- abraham/twitteroauth - Twitter Api
+- Facebook Graph SDK for PHP - Facebook and Instagram Api
+
 ## Notes:
 - For some reason instagram api will not upload a carosel that contains atleast one video. The api will just say media_id not available
 - There are requirements for images and videos so please check documentations
