@@ -47,9 +47,9 @@
 - Add the keys to your env
 
 ## Samples
-![twitter_post](https://github.com/spice-factory-ph/social-media-post-maker/assets/125238237/005a6f00-90c6-4d17-afbf-e53608a52d49)
-![fb_post](https://github.com/spice-factory-ph/social-media-post-maker/assets/125238237/a20396a6-7963-4fd1-964b-8efcaccf0977)
-![insta_post](https://github.com/spice-factory-ph/social-media-post-maker/assets/125238237/fcc18bf1-97ec-45cf-b839-733c25ab1fce)
+![twitter_post](https://github.com/user-attachments/assets/88ffcd3f-5e23-4553-a516-c7d45ee0eeeb)
+![fb_post](https://github.com/user-attachments/assets/e1a80c85-5f5e-48cf-9594-8e2a7e4737af)
+![insta_post](https://github.com/user-attachments/assets/219d0728-7c78-4557-bda0-8c2c07d14cec)
 
 ## Tech Stack
 - Laravel 10
